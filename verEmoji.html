@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle del Emoji</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Detalle del Emoji</h1>
+    
+    <a href="index.html" class="btn-tornar">⬅ Volver a la lista</a>
+    
+    <div id="detall-emoji"></div>
+
+    <script>
+        // Extraemos el parámetro "nom" de la URL
+        function obtenirNom() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get("nom");
+        }
+
+        async function carregarEmoji() {
+            const nom = obtenirNom();
+
+            if (!nom) {
+                document.getElementById("detall-emoji").innerHTML = "<p>No se ha encontrado el nombre del emoji en la URL.</p>";
+                return;
+            }
+
+            try {
+                // Buscamos el emoji específico en la API
+                const url = `https://emojihub.yurace.pro/api/search?q=${nom}`;
+                const resposta = await fetch(url);
+                
+                if (!resposta.ok) throw new Error("Error al buscar el emoji");
+
+                const dades = await resposta.json(); 
+                
+                if (dades.length === 0) {
+                    document.getElementById("detall-emoji").innerHTML = "<p>Emoji no encontrado.</p>";
+                    return;
+                }
+                
+                const emoji = dades[0]; 
+                const contenidor = document.getElementById("detall-emoji");
+                
+                // Evitamos que el navegador interprete el código HTML directamente
+                const codiHtmlText = emoji.htmlCode[0].replace(/&/g, '&amp;');
+
+                // Inyectamos el HTML con las clases CSS aplicadas
+                contenidor.innerHTML = `
+                    <div class="emoji-gigante">${emoji.htmlCode[0]}</div>
+                    <h2>${emoji.name.toUpperCase()}</h2>
+                    <p><strong>Categoría:</strong> ${emoji.category}</p>
+                    <p><strong>Grupo:</strong> ${emoji.group}</p>
+                    <p><strong>Código HTML:</strong> <code>${codiHtmlText}</code></p>
+                    <p><strong>Unicode:</strong> <code>${emoji.unicode[0]}</code></p>
+                `;
+
+            } catch (error) {
+                console.error("Error:", error);
+                document.getElementById("detall-emoji").innerHTML = "<p>Ha fallado la conexión con la API.</p>";
+            }
+        }
+
+        carregarEmoji();
+    </script>
+</body>
+</html>

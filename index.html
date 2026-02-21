@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Emojis</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Buscador de Emojis</h1>
+    <ul id="emojis"></ul>
+
+    <script>
+        async function carregarEmojis() {
+            try {
+                const resposta = await fetch('https://emojihub.yurace.pro/api/all/category/food-and-drink');
+                if (!resposta.ok) throw new Error("Error al cargar los emojis");
+
+                const emojis = await resposta.json();
+                const llista = document.getElementById("emojis");
+
+                emojis.forEach(emoji => {
+                    const element = document.createElement("li");
+                    const nomCodificat = encodeURIComponent(emoji.name);
+                    
+                    element.innerHTML = `
+                        <p class="emoji-icon">${emoji.htmlCode[0]}</p>
+                        <p><strong><a href="verEmoji.html?nom=${nomCodificat}">${emoji.name}</a></strong></p>
+                        <p style="color: #64748b; font-size: 0.9em;">Grupo: ${emoji.group}</p>
+                    `;
+                    llista.appendChild(element);
+                });
+            } catch (error) {
+                console.error("Ha habido un error: ", error);
+            }
+        }
+
+        carregarEmojis();
+    </script>
+</body>
+</html>
