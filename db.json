@@ -1,18 +1,9 @@
 {
   "emojis": [
     {
+      "id": 1,
       "name": "grinning face",
-      "category": "smileys and people",
-      "group": "face positive",
-      "htmlCode": ["&#128512;"],
-      "unicode": ["U+1F600"]
-    },
-    {
-      "name": "grinning face with big eyes",
-      "category": "smileys and people",
-      "group": "face positive",
-      "htmlCode": ["&#128515;"],
-      "unicode": ["U+1F603"]
+      "category": "smileys and people"
     }
   ]
 }
